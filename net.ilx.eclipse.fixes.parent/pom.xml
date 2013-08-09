@@ -1,0 +1,153 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.ilx.eclipse.fixes</groupId>
+	<artifactId>fixes-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Eclipse Fixes parent</name>
+	<description>Parent project for eclipse fixes.</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<tycho.version>0.18.1</tycho.version>
+		<tycho-extras.version>0.18.1</tycho-extras.version>
+		<version.versions-maven-plugin>1.2</version.versions-maven-plugin>
+		<target.platform>m2e-e422</target.platform>
+	</properties>
+
+	<modules>
+		<module>target-platform</module>
+		<module>net.ilx.eclipse.fixes.menuhelper</module>
+		<module>net.ilx.eclipse.fixes.feature</module>
+		<module>net.ilx.eclipse.fixes.repository</module>
+	</modules>
+
+	<profiles>
+		<profile>
+			<id>sun-jvm</id>
+			<activation>
+				<property>
+					<name>java.vendor.url</name>
+					<value>http://java.sun.com/</value>
+				</property>
+			</activation>
+			<properties>
+				<tycho.test.jvmArgs>-Xmx800m
+-XX:MaxPermSize=256m</tycho.test.jvmArgs>
+			</properties>
+		</profile>
+		<profile>
+			<id>e422</id>
+			<activation>
+				<property>
+					<name>target.platform</name>
+					<value>m2e-e422</value>
+				</property>
+			</activation>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.eclipse.tycho</groupId>
+							<artifactId>target-platform-configuration</artifactId>
+							<version>${tycho.version}</version>
+							<configuration>
+								<resolver>p2</resolver>
+								<target>
+									<artifact>
+										<groupId>${project.groupId}</groupId>
+										<artifactId>target-platform</artifactId>
+										<version>${project.version}</version>
+										<classifier>${target.platform}</classifier>
+									</artifact>
+								</target>
+								<ignoreTychoRepositories>true</ignoreTychoRepositories>
+							</configuration>
+						</plugin>
+
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-source-plugin</artifactId>
+					<version>${tycho.version}</version>
+					<executions>
+						<execution>
+							<id>plugin-source</id>
+							<goals>
+								<goal>plugin-source</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<plugin>
+					<groupId>org.eclipse.tycho.extras</groupId>
+					<artifactId>tycho-source-feature-plugin</artifactId>
+					<version>${tycho-extras.version}</version>
+					<executions>
+						<execution>
+							<id>source-feature</id>
+							<phase>package</phase>
+							<goals>
+								<goal>source-feature</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-p2-plugin</artifactId>
+					<version>${tycho.version}</version>
+					<executions>
+						<execution>
+							<id>attach-p2-metadata</id>
+							<phase>package</phase>
+							<goals>
+								<goal>p2-metadata</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>${version.versions-maven-plugin}</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-versions-plugin</artifactId>
+				<version>${tycho.version}</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<extensions>true</extensions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
